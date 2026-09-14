@@ -1,0 +1,320 @@
+"use client";
+import { createContext, useContext, useState, useEffect } from "react";
+
+const translations = {
+  en: {
+    home: "Home",
+    browseCars: "Browse Cars",
+    sellYourCar: "Sell a Part",
+    howItWorks: "How It Works",
+    faq: "FAQ",
+    contact: "Contact",
+    allBrands: "All Brands",
+    allModels: "All Models",
+    allFuelTypes: "All Fuel Types",
+    maxPrice: "Max Price (EGP)",
+    browseCarsForSale: "Browse Parts",
+    noCarsMatch: "No parts match your search right now.",
+    loadingCars: "Loading...",
+    tagline: "Sell your car quickly, safely, and without the hassle.",
+    searchParts: "Search Parts",
+    signIn: "Sign In",
+    myDashboard: "My Account",
+    searchYear: "Year",
+    allGovernorates: "All Governorates",
+
+    howItWorksTitle: "How It Works",
+    forBuyers: "(Buyer)",
+    forSellers: "(Seller)",
+
+    step1Title: "Search for the Part",
+    step1Desc: "Search by part name, brand, model, and year.",
+    step2Title: "Browse the Results",
+    step2Desc: "See available parts with photos and prices.",
+    step3Title: "Contact the Seller",
+    step3Desc: "Reach out directly using the seller's phone and location.",
+    step4Title: "Get Your Part",
+    step4Desc: "Agree on the details and pick up your part.",
+
+    sellerStep1Title: "Create a Seller Account",
+    sellerStep1Desc: "Sign up with your email, phone, and location.",
+    sellerStep2Title: "Wait for Approval",
+    sellerStep2Desc: "Our admin team reviews and approves your account.",
+    sellerStep3Title: "Add Your Parts",
+    sellerStep3Desc: "List parts with photos, price, and car details (or mark as fits any car).",
+    sellerStep4Title: "Get Contacted",
+    sellerStep4Desc: "Buyers see your listing and reach out to you directly.",
+
+    whySellWithUs: "Why Sell With Us",
+    benefit1: "Easy, simple process",
+    benefit2: "Fast response time",
+    benefit3: "Your information stays secure",
+    benefit4: "Professional, friendly support",
+    benefit5: "No complicated steps",
+
+    faqTitle: "Frequently Asked Questions",
+    faqQ1: "How do I find a part?",
+    faqA1: "Use the search bar to look up a part by name, brand, model, or year, then browse the results.",
+    faqQ2: "How do I contact a seller?",
+    faqA2: "Each listing shows the seller's phone number and location so you can contact them directly.",
+    faqQ3: "How do I sell parts on the site?",
+    faqA3: "Sign up for a seller account, wait for admin approval, then add your parts from your dashboard.",
+    faqQ4: "Is my information safe?",
+    faqA4: "Yes. Your personal information is only used to help buyers and sellers connect, and is never shared beyond that.",
+
+    footerTagline: "Find or sell car parts easily and safely.",
+    footerEmail: "Email: contact@bebocars.com",
+    footerPhone: "Phone: +20 000 000 0000",
+    footerRights: "All rights reserved.",
+
+    sellTitle: "Sell Your Car",
+    stepOf: "Step {n} of 5",
+    carInformation: "Car Information",
+    selectBrand: "Brand",
+    selectModel: "Model",
+    manufacturingYear: "Manufacturing Year",
+    mileageKm: "Mileage (km)",
+    selectTransmission: "Select Transmission",
+    automatic: "Automatic",
+    manual: "Manual",
+    selectFuelType: "Select Fuel Type",
+    askingPrice: "Asking Price (EGP)",
+    next: "Next",
+    back: "Back",
+    carCondition: "Car Condition",
+    excellent: "Excellent",
+    good: "Good",
+    fair: "Fair",
+    needsRepairs: "Needs Repairs",
+    carPhotos: "Photos",
+    contactInformation: "Contact Information",
+    fullName: "Full Name",
+    phoneNumber: "Phone Number",
+    cityLocation: "City / Location",
+    city: "City",
+    shopAddress: "Shop Address",
+    reviewSubmission: "Review Your Submission",
+    submit: "Submit",
+    submitting: "Submitting...",
+    thankYou: "Thank You!",
+    thankYouMsg: "Your submission has been sent. Our team will contact you soon.",
+
+    partName: "Part Name",
+    partInformation: "Part Information",
+
+    createSellerAccount: "Create Seller Account",
+    email: "Email",
+    password: "Password",
+    country: "Country",
+    signUp: "Sign Up",
+    creatingAccount: "Creating account...",
+    alreadyHaveAccount: "Already have an account? Log in",
+    sellerLogin: "Seller Login",
+    loggingIn: "Logging in...",
+    logIn: "Log In",
+    dontHaveAccount: "Don't have an account? Sign up",
+    invalidLogin: "Invalid email or password.",
+
+    accountPendingTitle: "Account Pending Approval",
+    accountPendingMsg: "Your seller account is waiting for admin approval. Once approved, you'll be able to add and publish products automatically.",
+    profileNotFoundTitle: "Profile Not Found",
+    profileNotFoundMsg: "We couldn't find your seller profile. Please try signing up again, or contact support.",
+    logOut: "Log Out",
+    backToSite: "Back to Site",
+    sellerDashboardTitle: "Seller Dashboard",
+    addNewProduct: "Add New Product",
+    manufacturingYearPlaceholder: "Manufacturing Year",
+    priceEgp: "Price (EGP)",
+    adding: "Adding...",
+    addProduct: "Add Product",
+    yourProducts: "Your Products",
+    noProductsYet: "No products yet. Add your first one above!",
+    delete: "Delete",
+
+    chooseFiles: "Choose Files",
+    noFileChosen: "No file chosen",
+    filesSelected: "{n} file(s) selected",
+    productAddedTitle: "Done!",
+    productAddedMsg: "Your product has been added. Add another product?",
+    addAnother: "Add Another",
+    backToHome: "Back to Home",
+
+    universalPart: "This part fits any car (not specific to one type/model/year)",
+    fitsAnyCar: "Fits any car",
+    selectGovernorate: "Governorate",
+  },
+  ar: {
+    home: "الرئيسية",
+    browseCars: "تصفح السيارات",
+    sellYourCar: "بائع",
+    howItWorks: "كيف تعمل",
+    faq: "الأسئلة الشائعة",
+    contact: "اتصل بنا",
+    allBrands: "كل الماركات",
+    allModels: "كل الموديلات",
+    allFuelTypes: "كل أنواع الوقود",
+    maxPrice: "أعلى سعر (جنيه)",
+    browseCarsForSale: "تصفح قطع غيار",
+    noCarsMatch: "لا توجد قطع تطابق بحثك حاليًا.",
+    loadingCars: "جارٍ التحميل...",
+    tagline: "بيع سيارتك بسرعة وأمان وبدون تعقيد.",
+    searchParts: "قطع غيار",
+    signIn: "تسجيل الدخول",
+    myDashboard: "حسابي",
+    searchYear: "سنة الصنع",
+    allGovernorates: "كل المحافظات",
+
+    howItWorksTitle: "كيف تعمل الخدمة",
+    forBuyers: "(مشتري)",
+    forSellers: "(بائع)",
+
+    step1Title: "ابحث عن القطعة",
+    step1Desc: "ابحث باسم القطعة أو الماركة أو الموديل أو سنة الصنع.",
+    step2Title: "تصفح النتائج",
+    step2Desc: "شاهد القطع المتاحة مع الصور والأسعار.",
+    step3Title: "تواصل مع البائع",
+    step3Desc: "تواصل مباشرة باستخدام رقم هاتف البائع وموقعه.",
+    step4Title: "احصل على قطعتك",
+    step4Desc: "اتفق على التفاصيل واستلم قطعتك.",
+
+    sellerStep1Title: "أنشئ حساب بائع",
+    sellerStep1Desc: "سجل ببريدك الإلكتروني ورقم هاتفك وموقعك.",
+    sellerStep2Title: "انتظر الموافقة",
+    sellerStep2Desc: "يقوم فريق الإدارة بمراجعة حسابك والموافقة عليه.",
+    sellerStep3Title: "أضف قطعك",
+    sellerStep3Desc: "أضف القطع مع الصور والسعر وبيانات السيارة (أو حددها كمناسبة لأي سيارة).",
+    sellerStep4Title: "استقبل تواصل المشترين",
+    sellerStep4Desc: "يرى المشترون قطعتك ويتواصلون معك مباشرة.",
+
+    whySellWithUs: "لماذا تبيع معنا",
+    benefit1: "عملية سهلة وبسيطة",
+    benefit2: "استجابة سريعة",
+    benefit3: "بياناتك في أمان",
+    benefit4: "دعم احترافي وودود",
+    benefit5: "بدون خطوات معقدة",
+
+    faqTitle: "الأسئلة الشائعة",
+    faqQ1: "كيف أبحث عن قطعة غيار؟",
+    faqA1: "استخدم شريط البحث للبحث باسم القطعة أو الماركة أو الموديل أو سنة الصنع، ثم تصفح النتائج.",
+    faqQ2: "كيف أتواصل مع البائع؟",
+    faqA2: "كل قطعة معروضة تظهر رقم هاتف البائع وموقعه، يمكنك التواصل معه مباشرة.",
+    faqQ3: "كيف أبيع قطع غيار على الموقع؟",
+    faqA3: "سجل حساب بائع، انتظر موافقة الإدارة، ثم أضف قطعك من لوحة تحكمك.",
+    faqQ4: "هل بياناتي آمنة؟",
+    faqA4: "نعم، تُستخدم بياناتك فقط لمساعدة المشترين والبائعين على التواصل، ولا تتم مشاركتها لأي غرض آخر.",
+
+    footerTagline: "ابحث عن قطع غيار سيارتك أو بعها بسهولة وأمان.",
+    footerEmail: "البريد الإلكتروني: contact@bebocars.com",
+    footerPhone: "الهاتف: +20 000 000 0000",
+    footerRights: "جميع الحقوق محفوظة.",
+
+    sellTitle: "بيع سيارتك",
+    stepOf: "الخطوة {n} من 5",
+    carInformation: "بيانات السيارة",
+    selectBrand: "الماركة",
+    selectModel: "الموديل",
+    manufacturingYear: "سنة الصنع",
+    mileageKm: "عدد الكيلومترات",
+    selectTransmission: "اختر ناقل الحركة",
+    automatic: "أوتوماتيك",
+    manual: "عادي",
+    selectFuelType: "اختر نوع الوقود",
+    askingPrice: "السعر المطلوب (جنيه)",
+    next: "التالي",
+    back: "رجوع",
+    carCondition: "حالة السيارة",
+    excellent: "ممتازة",
+    good: "جيدة",
+    fair: "مقبولة",
+    needsRepairs: "تحتاج إصلاحات",
+    carPhotos: "الصور",
+    contactInformation: "بيانات التواصل",
+    fullName: "الاسم بالكامل",
+    phoneNumber: "رقم الهاتف",
+    cityLocation: "المدينة / الموقع",
+    city: "المدينة",
+    shopAddress: "عنوان المحل",
+    reviewSubmission: "راجع بياناتك",
+    submit: "إرسال",
+    submitting: "جارٍ الإرسال...",
+    thankYou: "شكرًا لك!",
+    thankYouMsg: "تم إرسال بياناتك، سيتواصل معك فريقنا قريبًا.",
+
+    partName: "اسم القطعة",
+    partInformation: "بيانات القطعة",
+
+    createSellerAccount: "إنشاء حساب بائع",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    country: "الدولة",
+    signUp: "إنشاء حساب",
+    creatingAccount: "جارٍ إنشاء الحساب...",
+    alreadyHaveAccount: "لديك حساب بالفعل؟ سجل الدخول",
+    sellerLogin: "تسجيل دخول البائع",
+    loggingIn: "جارٍ تسجيل الدخول...",
+    logIn: "تسجيل الدخول",
+    dontHaveAccount: "ليس لديك حساب؟ سجل الآن",
+    invalidLogin: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+
+    accountPendingTitle: "الحساب في انتظار الموافقة",
+    accountPendingMsg: "حسابك كبائع في انتظار موافقة الإدارة. بمجرد الموافقة، ستتمكن من إضافة ونشر المنتجات تلقائيًا.",
+    profileNotFoundTitle: "لم يتم العثور على الحساب",
+    profileNotFoundMsg: "لم نتمكن من العثور على بيانات حسابك كبائع. حاول التسجيل مرة أخرى أو تواصل مع الدعم.",
+    logOut: "تسجيل الخروج",
+    backToSite: "العودة للموقع",
+    sellerDashboardTitle: "لوحة تحكم البائع",
+    addNewProduct: "إضافة منتج جديد",
+    manufacturingYearPlaceholder: "سنة الصنع",
+    priceEgp: "السعر (جنيه)",
+    adding: "جارٍ الإضافة...",
+    addProduct: "إضافة المنتج",
+    yourProducts: "منتجاتك",
+    noProductsYet: "لا توجد منتجات بعد. أضف أول منتج بالأعلى!",
+    delete: "حذف",
+
+    chooseFiles: "اختر الصور",
+    noFileChosen: "لم يتم اختيار أي ملف",
+    filesSelected: "تم اختيار {n} صورة",
+    productAddedTitle: "تم!",
+    productAddedMsg: "تم اضافة منتجك. ضيف منتج اخر؟",
+    addAnother: "إضافة منتج آخر",
+    backToHome: "العودة للرئيسية",
+
+    universalPart: "هذه القطعة تناسب أي سيارة (غير مخصصة لنوع أو موديل أو سنة معينة)",
+    fitsAnyCar: "تناسب أي سيارة",
+    selectGovernorate: "المحافظة",
+  },
+};
+
+const LanguageContext = createContext();
+
+export function LanguageProvider({ children }) {
+  const [lang, setLang] = useState("ar");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("lang");
+    if (saved) setLang(saved);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("lang", lang);
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  function toggleLanguage() {
+    setLang(lang === "en" ? "ar" : "en");
+  }
+
+  const t = translations[lang];
+
+  return (
+    <LanguageContext.Provider value={{ lang, toggleLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext);
+}
