@@ -64,12 +64,17 @@ export default function Navbar() {
         )}
 
         {checked && !isLoggedIn && (
-          <Link
-            href="/login"
-            className="bg-brand-accent text-black font-semibold px-4 py-2 rounded-full hover:bg-zinc-200 transition"
-          >
-            {t.signIn}
-          </Link>
+          <>
+            <Link href="/login" className="hover:text-brand-text transition">
+              {t.logIn}
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-brand-accent text-black font-semibold px-4 py-2 rounded-full hover:bg-zinc-200 transition"
+            >
+              {t.signUp}
+            </Link>
+          </>
         )}
 
         <button

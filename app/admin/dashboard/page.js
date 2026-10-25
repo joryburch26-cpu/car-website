@@ -65,6 +65,42 @@ export default function AdminDashboard() {
     loadData();
   }
 
+  async function deleteAccount(sellerId, sellerEmail) {
+    const confirmDelete = confirm(
+      "PERMANENTLY delete the account " + sellerEmail + "? Their login, seller profile and all of their products will be erased. This cannot be undone."
+    );
+    if (!confirmDelete) return;
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      router.push("/admin/login");
+      return;
+    }
+
+    const response = await fetch("/api/admin/delete-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + session.access_token,
+      },
+      body: JSON.stringify({ userId: sellerId }),
+    });
+
+    let result = {};
+    try {
+      result = await response.json();
+    } catch (e) {
+      result = {};
+    }
+
+    if (!response.ok) {
+      alert("Could not delete the account: " + (result.error || response.status));
+      return;
+    }
+
+    loadData();
+  }
+
   async function deleteProduct(id) {
     const confirmDelete = confirm("Delete this product?");
     if (!confirmDelete) return;
@@ -145,6 +181,12 @@ export default function AdminDashboard() {
                         className="text-xs font-semibold text-red-400 hover:text-red-300"
                       >
                         Remove
+                      </button>
+                      <button
+                        onClick={() => deleteAccount(seller.user_id, seller.email)}
+                        className="text-xs font-semibold text-red-500 hover:text-red-400 ms-4"
+                      >
+                        Delete account
                       </button>
                     </td>
                   </tr>
