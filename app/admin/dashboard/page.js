@@ -22,6 +22,12 @@ export default function AdminDashboard() {
       return;
     }
 
+    const { data: isAdmin } = await supabase.rpc("is_admin");
+    if (isAdmin !== true) {
+      router.push("/admin/login");
+      return;
+    }
+
     loadData();
   }
 

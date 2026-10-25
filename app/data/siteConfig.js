@@ -1,6 +1,6 @@
 const siteConfig = {
   name: "Bebo Cars",
-  tagline: "Sell your car quickly, safely, and without the hassle.",
+  tagline: "Find car parts from stores near you, quickly and easily.",
 };
 
 export default siteConfig;

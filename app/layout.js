@@ -3,7 +3,7 @@ import { LanguageProvider } from "./context/LanguageContext";
 
 export const metadata = {
   title: "Bebo Cars",
-  description: "Sell your car quickly and easily",
+  description: "Find car parts from stores near you",
 };
 
 export default function RootLayout({ children }) {

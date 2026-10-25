@@ -15,7 +15,7 @@ export default function Footer() {
         </div>
         <div className="flex flex-col gap-2 text-sm">
           <a href="/" className="hover:text-brand-text transition">{t.home}</a>
-          <a href="/sell" className="hover:text-brand-text transition">{t.sellYourCar}</a>
+          <a href="/seller/signup" className="hover:text-brand-text transition">{t.sellYourCar}</a>
           <a href="/#how-it-works" className="hover:text-brand-text transition">{t.howItWorks}</a>
           <a href="/#faq" className="hover:text-brand-text transition">{t.faq}</a>
         </div>

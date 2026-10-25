@@ -20,13 +20,22 @@ export default function AdminLogin() {
       password,
     });
 
+    if (error) {
+      setLoading(false);
+      setErrorMsg("Invalid email or password.");
+      return;
+    }
+
+    const { data: isAdmin } = await supabase.rpc("is_admin");
     setLoading(false);
 
-    if (error) {
-      setErrorMsg("Invalid email or password.");
-    } else {
-      router.push("/admin/dashboard");
+    if (isAdmin !== true) {
+      await supabase.auth.signOut();
+      setErrorMsg("This account is not an admin.");
+      return;
     }
+
+    router.push("/admin/dashboard");
   }
 
   return (
