@@ -24,6 +24,38 @@ export default function Signup() {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // "signup" is shown first; "login" is for people who already have an account
+  const [mode, setMode] = useState("signup");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg("");
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: loginPassword,
+    });
+
+    if (error || !data.user) {
+      setLoading(false);
+      setErrorMsg(t.invalidLogin);
+      return;
+    }
+
+    // Sellers go to their dashboard, buyers go to the search page
+    const { data: sellerRow } = await supabase
+      .from("sellers")
+      .select("user_id")
+      .eq("user_id", data.user.id)
+      .maybeSingle();
+
+    setLoading(false);
+    router.push(sellerRow ? "/seller/dashboard" : "/");
+  }
+
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -76,6 +108,59 @@ export default function Signup() {
   const inputClass =
     "bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white";
 
+  // Log in screen for people who already have an account
+  if (mode === "login") {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-screen bg-brand-bg text-brand-text flex flex-col items-center justify-center px-6 gap-4">
+          <form
+            onSubmit={handleLogin}
+            className="bg-brand-card rounded-2xl p-8 w-full max-w-sm flex flex-col gap-4"
+          >
+            <h1 className="text-2xl font-bold text-center mb-2">{t.loginTitle}</h1>
+
+            <input
+              type="email"
+              placeholder={t.email}
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              className={inputClass}
+              required
+            />
+
+            <input
+              type="password"
+              placeholder={t.password}
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              className={inputClass}
+              required
+            />
+
+            {errorMsg && <p className="text-red-400 text-sm text-center">{errorMsg}</p>}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-2 bg-brand-accent text-black font-semibold px-6 py-3 rounded-full hover:bg-zinc-200 transition disabled:opacity-50"
+            >
+              {loading ? t.loggingIn : t.logIn}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setErrorMsg(""); setMode("signup"); }}
+              className="text-brand-muted hover:text-white text-sm text-center transition"
+            >
+              {t.dontHaveAccount}
+            </button>
+          </form>
+        </main>
+      </>
+    );
+  }
+
   // Step 1: ask the visitor what they are
   if (!accountType) {
     return (
@@ -103,9 +188,13 @@ export default function Signup() {
               <span className="block text-brand-muted text-sm mt-1">{t.iAmSellerDesc}</span>
             </button>
 
-            <a href="/login" className="text-brand-muted hover:text-white text-sm text-center transition">
+            <button
+              type="button"
+              onClick={() => { setErrorMsg(""); setMode("login"); }}
+              className="text-brand-muted hover:text-white text-sm text-center transition"
+            >
               {t.alreadyHaveAccount}
-            </a>
+            </button>
           </div>
         </main>
       </>
@@ -210,9 +299,13 @@ export default function Signup() {
             {t.changeAccountType}
           </button>
 
-          <a href="/login" className="text-brand-muted hover:text-white text-sm text-center transition">
+          <button
+            type="button"
+            onClick={() => { setErrorMsg(""); setMode("login"); }}
+            className="text-brand-muted hover:text-white text-sm text-center transition"
+          >
             {t.alreadyHaveAccount}
-          </a>
+          </button>
         </form>
       </main>
     </>
