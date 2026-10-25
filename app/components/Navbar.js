@@ -21,9 +21,9 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full flex items-center justify-between px-6 py-4 bg-brand-bg text-brand-text border-b border-zinc-800">
+    <nav className="w-full flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-brand-bg text-brand-text border-b border-zinc-800">
       <span className="text-xl font-bold">{siteConfig.name}</span>
-      <div className="flex items-center gap-6 text-sm text-brand-muted">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-6 text-sm text-brand-muted">
         <a href="/" className="hover:text-brand-text transition">{t.home}</a>
         <a href="/#how-it-works" className="hover:text-brand-text transition">{t.howItWorks}</a>
         <a href="/#faq" className="hover:text-brand-text transition">{t.faq}</a>
