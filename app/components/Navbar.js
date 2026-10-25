@@ -8,16 +8,32 @@ import { supabase } from "../lib/supabaseClient";
 export default function Navbar() {
   const { lang, toggleLanguage, t } = useLanguage();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    checkSeller();
+    checkUser();
   }, []);
 
-  async function checkSeller() {
+  async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser();
     setIsLoggedIn(!!user);
+
+    if (user) {
+      const { data: sellerRow } = await supabase
+        .from("sellers")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setIsSeller(!!sellerRow);
+    }
+
     setChecked(true);
+  }
+
+  async function handleBuyerLogout() {
+    await supabase.auth.signOut();
+    window.location.href = "/";
   }
 
   return (
@@ -29,12 +45,30 @@ export default function Navbar() {
         <a href="/#faq" className="hover:text-brand-text transition">{t.faq}</a>
         <a href="/#contact" className="hover:text-brand-text transition">{t.contact}</a>
 
-        {checked && (
+        {checked && isLoggedIn && isSeller && (
           <Link
-            href={isLoggedIn ? "/seller/dashboard" : "/seller/login"}
+            href="/seller/dashboard"
             className="bg-brand-accent text-black font-semibold px-4 py-2 rounded-full hover:bg-zinc-200 transition"
           >
-            {isLoggedIn ? t.myDashboard : t.signIn}
+            {t.myDashboard}
+          </Link>
+        )}
+
+        {checked && isLoggedIn && !isSeller && (
+          <button
+            onClick={handleBuyerLogout}
+            className="bg-brand-accent text-black font-semibold px-4 py-2 rounded-full hover:bg-zinc-200 transition"
+          >
+            {t.logOut}
+          </button>
+        )}
+
+        {checked && !isLoggedIn && (
+          <Link
+            href="/login"
+            className="bg-brand-accent text-black font-semibold px-4 py-2 rounded-full hover:bg-zinc-200 transition"
+          >
+            {t.signIn}
           </Link>
         )}
 

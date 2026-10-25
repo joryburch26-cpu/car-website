@@ -36,7 +36,7 @@ export default function SellerDashboard() {
     const user = authResult.data.user;
 
     if (!user) {
-      router.push("/seller/login");
+      router.push("/login");
       return;
     }
 
@@ -60,7 +60,7 @@ export default function SellerDashboard() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push("/seller/login");
+    router.push("/login");
   }
 
   function handlePhotoChange(e) {
@@ -172,21 +172,6 @@ export default function SellerDashboard() {
         <main className="min-h-screen bg-brand-bg text-brand-text flex flex-col items-center justify-center px-6 gap-4 text-center">
           <h1 className="text-2xl font-bold">{t.profileNotFoundTitle}</h1>
           <p className="text-brand-muted max-w-md">{t.profileNotFoundMsg}</p>
-          <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-zinc-600 hover:border-white transition text-sm">
-            {t.logOut}
-          </button>
-        </main>
-      </>
-    );
-  }
-
-  if (!seller.is_approved) {
-    return (
-      <>
-        <Navbar />
-        <main className="min-h-screen bg-brand-bg text-brand-text flex flex-col items-center justify-center px-6 gap-4 text-center">
-          <h1 className="text-2xl font-bold">{t.accountPendingTitle}</h1>
-          <p className="text-brand-muted max-w-md">{t.accountPendingMsg}</p>
           <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-zinc-600 hover:border-white transition text-sm">
             {t.logOut}
           </button>

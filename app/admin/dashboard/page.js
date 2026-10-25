@@ -54,8 +54,14 @@ export default function AdminDashboard() {
     router.push("/admin/login");
   }
 
-  async function toggleApproval(sellerId, currentValue) {
-    await supabase.from("sellers").update({ is_approved: !currentValue }).eq("user_id", sellerId);
+  async function removeSeller(sellerId, sellerEmail) {
+    const confirmRemove = confirm(
+      "Remove " + sellerEmail + " as a seller? All of their products will be deleted too. This cannot be undone."
+    );
+    if (!confirmRemove) return;
+
+    await supabase.from("products").delete().eq("seller_id", sellerId);
+    await supabase.from("sellers").delete().eq("user_id", sellerId);
     loadData();
   }
 
@@ -122,7 +128,6 @@ export default function AdminDashboard() {
                   <th className="p-4">Country</th>
                   <th className="p-4">City</th>
                   <th className="p-4">Address</th>
-                  <th className="p-4">Status</th>
                   <th className="p-4"></th>
                 </tr>
               </thead>
@@ -135,18 +140,11 @@ export default function AdminDashboard() {
                     <td className="p-4">{seller.city}</td>
                     <td className="p-4">{seller.address}</td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs ${seller.is_approved ? "bg-green-700" : "bg-zinc-700"}`}>
-                        {seller.is_approved ? "Approved" : "Pending"}
-                      </span>
-                    </td>
-                    <td className="p-4">
                       <button
-                        onClick={() => toggleApproval(seller.user_id, seller.is_approved)}
-                        className={`text-xs font-semibold ${
-                          seller.is_approved ? "text-red-400 hover:text-red-300" : "text-green-400 hover:text-green-300"
-                        }`}
+                        onClick={() => removeSeller(seller.user_id, seller.email)}
+                        className="text-xs font-semibold text-red-400 hover:text-red-300"
                       >
-                        {seller.is_approved ? "Revoke" : "Approve"}
+                        Remove
                       </button>
                     </td>
                   </tr>
