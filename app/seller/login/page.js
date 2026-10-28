@@ -1,14 +1,11 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
-// Old address: send everyone to the new shared login page
+// Old address: open the log in form on the sign-up page
 export default function SellerLoginRedirect() {
-  const router = useRouter();
-
   useEffect(() => {
-    router.replace("/login");
-  }, [router]);
+    window.location.replace("/signup#login");
+  }, []);
 
   return null;
 }

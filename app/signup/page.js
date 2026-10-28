@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabaseClient";
@@ -10,8 +10,8 @@ export default function Signup() {
   const router = useRouter();
   const { t } = useLanguage();
 
-  // null = the visitor has not chosen yet, otherwise "buyer" or "seller"
-  const [accountType, setAccountType] = useState(null);
+  // Only sellers have accounts now
+  const accountType = "seller";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -26,6 +26,16 @@ export default function Signup() {
 
   // "signup" is shown first; "login" is for people who already have an account
   const [mode, setMode] = useState("signup");
+
+  // The "Log in" link in the menu opens this page with #login at the end
+  useEffect(() => {
+    function syncMode() {
+      setMode(window.location.hash === "#login" ? "login" : "signup");
+    }
+    syncMode();
+    window.addEventListener("hashchange", syncMode);
+    return () => window.removeEventListener("hashchange", syncMode);
+  }, []);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
@@ -161,47 +171,7 @@ export default function Signup() {
     );
   }
 
-  // Step 1: ask the visitor what they are
-  if (!accountType) {
-    return (
-      <>
-        <Navbar />
-        <main className="min-h-screen bg-brand-bg text-brand-text flex items-center justify-center px-6 py-16">
-          <div className="bg-brand-card rounded-2xl p-8 w-full max-w-md flex flex-col gap-4">
-            <h1 className="text-2xl font-bold text-center mb-2">{t.chooseAccountType}</h1>
-
-            <button
-              type="button"
-              onClick={() => setAccountType("buyer")}
-              className="bg-brand-bg border border-zinc-700 hover:border-white rounded-2xl p-5 text-start transition"
-            >
-              <span className="block text-lg font-semibold">{t.iAmBuyer}</span>
-              <span className="block text-brand-muted text-sm mt-1">{t.iAmBuyerDesc}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setAccountType("seller")}
-              className="bg-brand-bg border border-zinc-700 hover:border-white rounded-2xl p-5 text-start transition"
-            >
-              <span className="block text-lg font-semibold">{t.iAmSeller}</span>
-              <span className="block text-brand-muted text-sm mt-1">{t.iAmSellerDesc}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => { setErrorMsg(""); setMode("login"); }}
-              className="text-brand-muted hover:text-white text-sm text-center transition"
-            >
-              {t.alreadyHaveAccount}
-            </button>
-          </div>
-        </main>
-      </>
-    );
-  }
-
-  // Step 2: the sign-up form for the chosen type
+  // The seller sign-up form
   return (
     <>
       <Navbar />
@@ -211,7 +181,7 @@ export default function Signup() {
           className="bg-brand-card rounded-2xl p-8 w-full max-w-md flex flex-col gap-4"
         >
           <h1 className="text-2xl font-bold text-center mb-2">
-            {accountType === "seller" ? t.createSellerAccount : t.createBuyerAccount}
+            {t.createSellerAccount}
           </h1>
 
           <input
@@ -289,14 +259,6 @@ export default function Signup() {
             className="mt-2 bg-brand-accent text-black font-semibold px-6 py-3 rounded-full hover:bg-zinc-200 transition disabled:opacity-50"
           >
             {loading ? t.creatingAccount : t.signUp}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setAccountType(null)}
-            className="text-brand-muted hover:text-white text-sm text-center transition"
-          >
-            {t.changeAccountType}
           </button>
 
           <button

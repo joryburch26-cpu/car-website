@@ -2,8 +2,8 @@ import "./globals.css";
 import { LanguageProvider } from "./context/LanguageContext";
 
 export const metadata = {
-  title: "Bebo Cars",
-  description: "Find car parts from stores near you",
+  title: "الوكالة | El Wekalla",
+  description: "سوق قطع غيار المستعمل - El Wekalla used car parts market",
 };
 
 export default function RootLayout({ children }) {
