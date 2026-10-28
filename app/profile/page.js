@@ -125,10 +125,13 @@ export default function Profile() {
 
     if (avatarFile) {
       const url = await uploadImage(avatarFile, userId, "avatar");
-      if (url) {
-        if (seller.avatar_url) await deleteImage(seller.avatar_url);
-        changes.avatar_url = url;
+      if (!url) {
+        setSaving(false);
+        setMessage(x.photoBad);
+        return;
       }
+      if (seller.avatar_url) await deleteImage(seller.avatar_url);
+      changes.avatar_url = url;
     }
 
     const { error } = await supabase.from("sellers").update(changes).eq("user_id", userId);
@@ -261,7 +264,7 @@ export default function Profile() {
               <label className={labelClass}>{x.profilePhoto}</label>
               <input
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/*"
                 onChange={(e) => setAvatarFile(e.target.files && e.target.files[0] ? e.target.files[0] : null)}
                 className="text-sm"
               />
@@ -338,7 +341,7 @@ export default function Profile() {
               {uploadingStock ? x.uploading : x.addStockPhotos}
               <input
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/*"
                 multiple
                 onChange={handleAddStock}
                 disabled={uploadingStock}

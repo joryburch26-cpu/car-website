@@ -235,7 +235,7 @@ export default function Signup() {
             <label className={labelClass}>{x.profilePhoto}</label>
             <input
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
               onChange={(e) => setAvatarFile(e.target.files && e.target.files[0] ? e.target.files[0] : null)}
               className="text-sm"
             />
