@@ -11,6 +11,7 @@ export default function AdminDashboard() {
   const [visits, setVisits] = useState({ today: 0, week: 0, total: 0 });
   const [visitLog, setVisitLog] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     checkUserAndLoad();
@@ -33,8 +34,14 @@ export default function AdminDashboard() {
     loadData();
   }
 
-  async function loadData() {
-    setLoading(true);
+  async function handleRefresh() {
+    setRefreshing(true);
+    await loadData(true);
+    setRefreshing(false);
+  }
+
+  async function loadData(quiet) {
+    if (!quiet) setLoading(true);
 
     const { data: sellersData } = await supabase
       .from("sellers")
@@ -150,6 +157,13 @@ export default function AdminDashboard() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
           <div className="flex gap-3">
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="px-4 py-2 rounded-full bg-brand-accent text-white hover:bg-[#015a96] transition text-sm disabled:opacity-60"
+            >
+              {refreshing ? "Refreshing..." : "Refresh"}
+            </button>
             <a href="/" className="px-4 py-2 rounded-full border border-[#81b7db] hover:border-[#0171bb] transition text-sm">
               Back to Site
             </a>
