@@ -8,6 +8,7 @@ export default function AdminDashboard() {
   const [tab, setTab] = useState("sellers");
   const [sellers, setSellers] = useState([]);
   const [products, setProducts] = useState([]);
+  const [visits, setVisits] = useState({ today: 0, week: 0, total: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -43,6 +44,23 @@ export default function AdminDashboard() {
       .from("products")
       .select("*")
       .order("created_at", { ascending: false });
+
+    const { data: visitData } = await supabase
+      .from("visit_counts")
+      .select("day, visits")
+      .order("day", { ascending: false });
+
+    const todayText = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+    const weekStart = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+    let todayCount = 0;
+    let weekCount = 0;
+    let totalCount = 0;
+    (visitData || []).forEach((row) => {
+      totalCount += row.visits;
+      if (row.day >= weekStart) weekCount += row.visits;
+      if (row.day === todayText) todayCount += row.visits;
+    });
+    setVisits({ today: todayCount, week: weekCount, total: totalCount });
 
     setSellers(sellersData || []);
     setProducts(productsData || []);
@@ -132,6 +150,21 @@ export default function AdminDashboard() {
             >
               Log Out
             </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="bg-brand-card rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold">{visits.today}</p>
+            <p className="text-brand-muted text-xs mt-1">Visitors today</p>
+          </div>
+          <div className="bg-brand-card rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold">{visits.week}</p>
+            <p className="text-brand-muted text-xs mt-1">Last 7 days</p>
+          </div>
+          <div className="bg-brand-card rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold">{visits.total}</p>
+            <p className="text-brand-muted text-xs mt-1">All time</p>
           </div>
         </div>
 

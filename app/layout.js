@@ -1,5 +1,6 @@
 import "./globals.css";
 import { LanguageProvider } from "./context/LanguageContext";
+import VisitCounter from "./components/VisitCounter";
 
 export const metadata = {
   title: "الوكالة | El Wekalla",
@@ -10,6 +11,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl">
       <body>
+        <VisitCounter />
         <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
