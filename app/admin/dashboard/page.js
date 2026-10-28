@@ -9,6 +9,7 @@ export default function AdminDashboard() {
   const [sellers, setSellers] = useState([]);
   const [products, setProducts] = useState([]);
   const [visits, setVisits] = useState({ today: 0, week: 0, total: 0 });
+  const [visitLog, setVisitLog] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -61,6 +62,13 @@ export default function AdminDashboard() {
       if (row.day === todayText) todayCount += row.visits;
     });
     setVisits({ today: todayCount, week: weekCount, total: totalCount });
+
+    const { data: logData } = await supabase
+      .from("visit_log")
+      .select("id, created_at, nav_type")
+      .order("created_at", { ascending: false })
+      .limit(10);
+    setVisitLog(logData || []);
 
     setSellers(sellersData || []);
     setProducts(productsData || []);
@@ -167,6 +175,25 @@ export default function AdminDashboard() {
             <p className="text-2xl font-bold">{visits.total}</p>
             <p className="text-brand-muted text-xs mt-1">All time</p>
           </div>
+        </div>
+
+        <div className="mb-8">
+          <p className="text-brand-muted text-xs mb-2">
+            Last 10 counted visits (time and how the page was opened)
+          </p>
+          {visitLog.length === 0 ? (
+            <p className="text-brand-muted text-sm">None yet</p>
+          ) : (
+            <ul className="text-sm grid gap-1">
+              {visitLog.map((item) => (
+                <li key={item.id}>
+                  {new Date(item.created_at).toLocaleString("en-GB", { timeZone: "Africa/Cairo" })}
+                  {" - "}
+                  {item.nav_type || "unknown"}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="flex gap-3 mb-6">
