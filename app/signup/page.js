@@ -2,30 +2,45 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
+import SellerFields from "../components/SellerFields";
 import { supabase } from "../lib/supabaseClient";
+import { isGoodImage, uploadImage } from "../lib/uploadImage";
 import { useLanguage } from "../context/LanguageContext";
-import governorates from "../data/governorates";
+import { siteText } from "../data/siteText";
+import egyptAreas from "../data/egyptAreas";
+
+const inputClass =
+  "bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb] w-full";
+const labelClass = "text-sm text-brand-muted mb-1 block";
 
 export default function Signup() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const x = siteText[lang];
 
-  // Only sellers have accounts now
-  const accountType = "seller";
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    phone: "",
-    country: "",
-    city: "",
-    address: "",
-  });
+  // "signup" is shown first; "login" is for sellers who already have an account
+  const [mode, setMode] = useState("signup");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // "signup" is shown first; "login" is for people who already have an account
-  const [mode, setMode] = useState("signup");
+  // Sign-up fields
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [values, setValues] = useState({
+    name: "",
+    shopName: "",
+    phone: "",
+    governorate: "",
+    area: "",
+    address: "",
+    countries: [],
+    brands: [],
+  });
+
+  // Log in fields
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
 
   // The "Log in" link in the menu opens this page with #login at the end
   useEffect(() => {
@@ -36,8 +51,6 @@ export default function Signup() {
     window.addEventListener("hashchange", syncMode);
     return () => window.removeEventListener("hashchange", syncMode);
   }, []);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -55,32 +68,38 @@ export default function Signup() {
       return;
     }
 
-    // Sellers go to their dashboard, buyers go to the search page
-    const { data: sellerRow } = await supabase
-      .from("sellers")
-      .select("user_id")
-      .eq("user_id", data.user.id)
-      .maybeSingle();
-
     setLoading(false);
-    router.push(sellerRow ? "/seller/dashboard" : "/");
-  }
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    router.push("/profile");
   }
 
   async function handleSignup(e) {
     e.preventDefault();
-    setLoading(true);
     setErrorMsg("");
 
-    const { data, error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-      options: { data: { role: accountType } },
-    });
+    if (
+      !values.name.trim() ||
+      !values.phone.trim() ||
+      !values.governorate ||
+      !values.area ||
+      !values.address.trim()
+    ) {
+      setErrorMsg(x.fillRequired);
+      return;
+    }
+
+    if (values.countries.length === 0 || values.brands.length === 0) {
+      setErrorMsg(x.chooseOneCountryBrand);
+      return;
+    }
+
+    if (avatarFile && !isGoodImage(avatarFile)) {
+      setErrorMsg(x.photoBad);
+      return;
+    }
+
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signUp({ email, password });
 
     if (error || !data.user) {
       setErrorMsg(error ? error.message : t.invalidLogin);
@@ -88,37 +107,48 @@ export default function Signup() {
       return;
     }
 
-    if (accountType === "seller") {
-      const { error: profileError } = await supabase.from("sellers").insert({
-        user_id: data.user.id,
-        email: formData.email,
-        phone: formData.phone,
-        country: formData.country,
-        city: formData.city,
-        address: formData.address,
-        is_approved: true,
-      });
+    const userId = data.user.id;
+    const governorate = egyptAreas.find((g) => g.key === values.governorate);
 
+    const { error: profileError } = await supabase.from("sellers").insert({
+      user_id: userId,
+      email: email,
+      phone: values.phone.trim(),
+      country: "Egypt",
+      city: governorate ? governorate.ar : values.governorate,
+      address: values.address.trim(),
+      is_approved: true,
+      name: values.name.trim(),
+      shop_name: values.shopName.trim() || null,
+      car_countries: values.countries,
+      car_brands: values.brands,
+      governorate: values.governorate,
+      area: values.area,
+    });
+
+    if (profileError) {
+      setErrorMsg(profileError.message);
       setLoading(false);
-
-      if (profileError) {
-        setErrorMsg(profileError.message);
-        return;
-      }
-
-      router.push("/seller/dashboard");
       return;
     }
 
-    // Buyers go straight to the search page
+    if (avatarFile) {
+      const url = await uploadImage(avatarFile, userId, "avatar");
+      if (url) {
+        await supabase.from("sellers").update({ avatar_url: url }).eq("user_id", userId);
+      }
+    }
+
     setLoading(false);
-    router.push("/");
+    router.push("/profile");
   }
 
-  const inputClass =
-    "bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]";
+  const submitClass =
+    "mt-2 bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition disabled:opacity-50";
+  const linkButtonClass =
+    "text-brand-muted hover:text-[#0171bb] text-sm text-center transition";
 
-  // Log in screen for people who already have an account
+  // Log in screen for sellers who already have an account
   if (mode === "login") {
     return (
       <>
@@ -150,18 +180,14 @@ export default function Signup() {
 
             {errorMsg && <p className="text-red-600 text-sm text-center">{errorMsg}</p>}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="mt-2 bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition disabled:opacity-50"
-            >
+            <button type="submit" disabled={loading} className={submitClass}>
               {loading ? t.loggingIn : t.logIn}
             </button>
 
             <button
               type="button"
               onClick={() => { setErrorMsg(""); setMode("signup"); }}
-              className="text-brand-muted hover:text-[#0171bb] text-sm text-center transition"
+              className={linkButtonClass}
             >
               {t.dontHaveAccount}
             </button>
@@ -175,96 +201,59 @@ export default function Signup() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-brand-bg text-brand-text flex items-center justify-center px-6 py-16">
+      <main className="min-h-screen bg-brand-bg text-brand-text flex items-center justify-center px-6 py-12">
         <form
           onSubmit={handleSignup}
-          className="bg-brand-card rounded-2xl p-8 w-full max-w-md flex flex-col gap-4"
+          className="bg-brand-card rounded-2xl p-8 w-full max-w-xl flex flex-col gap-4"
         >
-          <h1 className="text-2xl font-bold text-center mb-2">
-            {t.createSellerAccount}
-          </h1>
+          <h1 className="text-2xl font-bold text-center mb-2">{t.createSellerAccount}</h1>
 
-          <input
-            type="email"
-            name="email"
-            placeholder={t.email}
-            value={formData.email}
-            onChange={handleChange}
-            className={inputClass}
-            required
-          />
+          <div>
+            <label className={labelClass}>{t.email}</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={inputClass}
+              required
+            />
+          </div>
 
-          <input
-            type="password"
-            name="password"
-            placeholder={t.password}
-            value={formData.password}
-            onChange={handleChange}
-            className={inputClass}
-            required
-          />
+          <div>
+            <label className={labelClass}>{t.password}</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={inputClass}
+              minLength={6}
+              required
+            />
+          </div>
 
-          {accountType === "seller" && (
-            <>
-              <input
-                type="tel"
-                name="phone"
-                placeholder={t.phoneNumber}
-                value={formData.phone}
-                onChange={handleChange}
-                className={inputClass}
-                required
-              />
+          <div>
+            <label className={labelClass}>{x.profilePhoto}</label>
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={(e) => setAvatarFile(e.target.files && e.target.files[0] ? e.target.files[0] : null)}
+              className="text-sm"
+            />
+            <p className="text-xs text-brand-muted mt-1">{x.photoHint}</p>
+          </div>
 
-              <input
-                type="text"
-                name="country"
-                placeholder={t.country}
-                value={formData.country}
-                onChange={handleChange}
-                className={inputClass}
-                required
-              />
-
-              <select
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className={inputClass}
-                required
-              >
-                <option value="">{t.selectGovernorate}</option>
-                {governorates.map((gov) => (
-                  <option key={gov} value={gov}>{gov}</option>
-                ))}
-              </select>
-
-              <input
-                type="text"
-                name="address"
-                placeholder={t.shopAddress}
-                value={formData.address}
-                onChange={handleChange}
-                className={inputClass}
-                required
-              />
-            </>
-          )}
+          <SellerFields values={values} setValues={setValues} />
 
           {errorMsg && <p className="text-red-600 text-sm text-center">{errorMsg}</p>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-2 bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} className={submitClass}>
             {loading ? t.creatingAccount : t.signUp}
           </button>
 
           <button
             type="button"
             onClick={() => { setErrorMsg(""); setMode("login"); }}
-            className="text-brand-muted hover:text-[#0171bb] text-sm text-center transition"
+            className={linkButtonClass}
           >
             {t.alreadyHaveAccount}
           </button>

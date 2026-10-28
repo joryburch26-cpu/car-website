@@ -79,6 +79,7 @@ export default function AdminDashboard() {
     if (!confirmRemove) return;
 
     await supabase.from("products").delete().eq("seller_id", sellerId);
+    await supabase.from("stock_photos").delete().eq("seller_id", sellerId);
     await supabase.from("sellers").delete().eq("user_id", sellerId);
     loadData();
   }
@@ -192,10 +193,12 @@ export default function AdminDashboard() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-brand-muted border-b border-[#81b7db]">
+                  <th className="p-4">Code</th>
+                  <th className="p-4">Name</th>
                   <th className="p-4">Email</th>
                   <th className="p-4">Phone</th>
-                  <th className="p-4">Country</th>
-                  <th className="p-4">City</th>
+                  <th className="p-4">Governorate</th>
+                  <th className="p-4">Area</th>
                   <th className="p-4">Address</th>
                   <th className="p-4"></th>
                 </tr>
@@ -203,10 +206,12 @@ export default function AdminDashboard() {
               <tbody>
                 {sellers.map((seller) => (
                   <tr key={seller.id} className="border-b border-[#81b7db] hover:bg-white/70">
+                    <td className="p-4">{seller.seller_code}</td>
+                    <td className="p-4">{seller.name}{seller.shop_name ? " (" + seller.shop_name + ")" : ""}</td>
                     <td className="p-4">{seller.email}</td>
                     <td className="p-4">{seller.phone}</td>
-                    <td className="p-4">{seller.country}</td>
-                    <td className="p-4">{seller.city}</td>
+                    <td className="p-4">{seller.governorate || seller.city}</td>
+                    <td className="p-4">{seller.area}</td>
                     <td className="p-4">{seller.address}</td>
                     <td className="p-4">
                       <button

@@ -32,7 +32,7 @@ export default function Home() {
 
               {/* Only sellers who are signed in see this link */}
               {checked && isSeller && (
-                <a href="/seller/dashboard" className="text-center">
+                <a href="/profile" className="text-center">
                   <span className={titleClass}>{x.addInfoTitle}</span>
                   <span className={subtitleClass}>{other.addInfoTitle}</span>
                 </a>

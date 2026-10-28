@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 
-// Tells a page whether the visitor is logged in, and whether they are a seller
-export function useSeller() {
+// Tells a page whether the visitor is logged in, and whether they are a seller.
+// Pass a value that changes when the page changes (like the path) to check again.
+export function useSeller(refreshKey) {
   const [state, setState] = useState({ checked: false, isLoggedIn: false, isSeller: false });
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export function useSeller() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   return state;
 }

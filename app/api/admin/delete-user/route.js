@@ -63,6 +63,7 @@ export async function POST(request) {
 
   // 4. Delete products, seller profile, then the login itself
   await adminClient.from("products").delete().eq("seller_id", userId);
+  await adminClient.from("stock_photos").delete().eq("seller_id", userId);
   await adminClient.from("sellers").delete().eq("user_id", userId);
 
   const { error: deleteError } = await adminClient.auth.admin.deleteUser(userId);

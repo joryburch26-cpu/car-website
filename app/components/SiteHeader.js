@@ -42,7 +42,7 @@ export default function SiteHeader() {
           )}
 
           {checked && isLoggedIn && isSeller && (
-            <Link href="/seller/dashboard" className={linkClass}>{x.navProfile}</Link>
+            <Link href="/profile" className={linkClass}>{x.navProfile}</Link>
           )}
 
           {checked && isLoggedIn && (
