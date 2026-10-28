@@ -141,12 +141,12 @@ export default function AdminDashboard() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
           <div className="flex gap-3">
-            <a href="/" className="px-4 py-2 rounded-full border border-zinc-600 hover:border-white transition text-sm">
+            <a href="/" className="px-4 py-2 rounded-full border border-[#81b7db] hover:border-[#0171bb] transition text-sm">
               Back to Site
             </a>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 rounded-full border border-zinc-600 hover:border-white transition text-sm"
+              className="px-4 py-2 rounded-full border border-[#81b7db] hover:border-[#0171bb] transition text-sm"
             >
               Log Out
             </button>
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
           <button
             onClick={() => setTab("sellers")}
             className={`px-4 py-2 rounded-full text-sm transition ${
-              tab === "sellers" ? "bg-brand-accent text-black" : "border border-zinc-600 hover:border-white"
+              tab === "sellers" ? "bg-brand-accent text-white" : "border border-[#81b7db] hover:border-[#0171bb]"
             }`}
           >
             Sellers ({sellers.length})
@@ -180,7 +180,7 @@ export default function AdminDashboard() {
           <button
             onClick={() => setTab("products")}
             className={`px-4 py-2 rounded-full text-sm transition ${
-              tab === "products" ? "bg-brand-accent text-black" : "border border-zinc-600 hover:border-white"
+              tab === "products" ? "bg-brand-accent text-white" : "border border-[#81b7db] hover:border-[#0171bb]"
             }`}
           >
             Products ({products.length})
@@ -191,7 +191,7 @@ export default function AdminDashboard() {
           <div className="bg-brand-card rounded-2xl overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-brand-muted border-b border-zinc-700">
+                <tr className="text-left text-brand-muted border-b border-[#81b7db]">
                   <th className="p-4">Email</th>
                   <th className="p-4">Phone</th>
                   <th className="p-4">Country</th>
@@ -202,7 +202,7 @@ export default function AdminDashboard() {
               </thead>
               <tbody>
                 {sellers.map((seller) => (
-                  <tr key={seller.id} className="border-b border-zinc-700 hover:bg-zinc-700/40">
+                  <tr key={seller.id} className="border-b border-[#81b7db] hover:bg-white/70">
                     <td className="p-4">{seller.email}</td>
                     <td className="p-4">{seller.phone}</td>
                     <td className="p-4">{seller.country}</td>
@@ -211,13 +211,13 @@ export default function AdminDashboard() {
                     <td className="p-4">
                       <button
                         onClick={() => removeSeller(seller.user_id, seller.email)}
-                        className="text-xs font-semibold text-red-400 hover:text-red-300"
+                        className="text-xs font-semibold text-red-600 hover:text-red-700"
                       >
                         Remove
                       </button>
                       <button
                         onClick={() => deleteAccount(seller.user_id, seller.email)}
-                        className="text-xs font-semibold text-red-500 hover:text-red-400 ms-4"
+                        className="text-xs font-semibold text-red-600 hover:text-red-600 ms-4"
                       >
                         Delete account
                       </button>
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
             </table>
 
             {sellers.length === 0 && (
-              <p className="text-center text-zinc-500 py-10">No sellers yet.</p>
+              <p className="text-center text-brand-muted py-10">No sellers yet.</p>
             )}
           </div>
         )}
@@ -251,7 +251,7 @@ export default function AdminDashboard() {
                   <p className="text-brand-muted text-xs mt-1">{product.city}</p>
                   <button
                     onClick={() => deleteProduct(product.id)}
-                    className="text-red-400 hover:text-red-300 text-xs mt-3"
+                    className="text-red-600 hover:text-red-700 text-xs mt-3"
                   >
                     Delete
                   </button>
@@ -260,7 +260,7 @@ export default function AdminDashboard() {
             ))}
 
             {products.length === 0 && (
-              <p className="text-center text-zinc-500 py-10 col-span-full">No products yet.</p>
+              <p className="text-center text-brand-muted py-10 col-span-full">No products yet.</p>
             )}
           </div>
         )}

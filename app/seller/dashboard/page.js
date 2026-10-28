@@ -172,7 +172,7 @@ export default function SellerDashboard() {
         <main className="min-h-screen bg-brand-bg text-brand-text flex flex-col items-center justify-center px-6 gap-4 text-center">
           <h1 className="text-2xl font-bold">{t.profileNotFoundTitle}</h1>
           <p className="text-brand-muted max-w-md">{t.profileNotFoundMsg}</p>
-          <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-zinc-600 hover:border-white transition text-sm">
+          <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-[#81b7db] hover:border-[#0171bb] transition text-sm">
             {t.logOut}
           </button>
         </main>
@@ -181,13 +181,13 @@ export default function SellerDashboard() {
   }
 
   const backToSiteLink = (
-    <a href="/" className="px-4 py-2 rounded-full border border-zinc-600 hover:border-white transition text-sm">
+    <a href="/" className="px-4 py-2 rounded-full border border-[#81b7db] hover:border-[#0171bb] transition text-sm">
       {t.backToSite}
     </a>
   );
 
   const backToHomeLink = (
-    <a href="/" className="px-6 py-3 rounded-full border border-zinc-600 hover:border-white transition text-sm">
+    <a href="/" className="px-6 py-3 rounded-full border border-[#81b7db] hover:border-[#0171bb] transition text-sm">
       {t.backToHome}
     </a>
   );
@@ -204,7 +204,7 @@ export default function SellerDashboard() {
             <div className="flex gap-3">
               {backToSiteLink}
 
-              <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-zinc-600 hover:border-white transition text-sm">
+              <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-[#81b7db] hover:border-[#0171bb] transition text-sm">
                 {t.logOut}
               </button>
             </div>
@@ -218,7 +218,7 @@ export default function SellerDashboard() {
               placeholder={t.partName}
               value={partName}
               onChange={function (e) { setPartName(e.target.value); }}
-              className="bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white"
+              className="bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]"
               required
             />
 
@@ -239,7 +239,7 @@ export default function SellerDashboard() {
                   placeholder={t.selectBrand}
                   value={brand}
                   onChange={function (e) { setBrand(e.target.value); }}
-                  className="bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white"
+                  className="bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]"
                 />
 
                 <input
@@ -247,7 +247,7 @@ export default function SellerDashboard() {
                   placeholder={t.selectModel}
                   value={model}
                   onChange={function (e) { setModel(e.target.value); }}
-                  className="bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white"
+                  className="bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]"
                 />
 
                 <input
@@ -255,7 +255,7 @@ export default function SellerDashboard() {
                   placeholder={t.manufacturingYearPlaceholder}
                   value={year}
                   onChange={function (e) { setYear(e.target.value); }}
-                  className="bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white"
+                  className="bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]"
                 />
               </>
             )}
@@ -265,11 +265,11 @@ export default function SellerDashboard() {
               placeholder={t.priceEgp}
               value={price}
               onChange={function (e) { setPrice(e.target.value); }}
-              className="bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white"
+              className="bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]"
             />
 
             <div className="flex items-center gap-3">
-              <label className="bg-brand-accent text-black font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-zinc-200 transition text-sm">
+              <label className="bg-brand-accent text-white font-semibold px-4 py-2 rounded-full cursor-pointer hover:bg-[#015a96] transition text-sm">
                 {t.chooseFiles}
                 <input
                   type="file"
@@ -305,7 +305,7 @@ export default function SellerDashboard() {
             <button
               type="submit"
               disabled={uploading}
-              className="bg-brand-accent text-black font-semibold px-6 py-3 rounded-full hover:bg-zinc-200 transition disabled:opacity-50"
+              className="bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition disabled:opacity-50"
             >
               {uploading ? t.adding : t.addProduct}
             </button>
@@ -338,7 +338,7 @@ export default function SellerDashboard() {
                     <p className="font-bold mt-1">{Number(product.price).toLocaleString()} EGP</p>
                     <button
                       onClick={function () { handleDeleteProduct(product.id); }}
-                      className="text-red-400 hover:text-red-300 text-xs mt-3"
+                      className="text-red-600 hover:text-red-700 text-xs mt-3"
                     >
                       {t.delete}
                     </button>
@@ -349,7 +349,7 @@ export default function SellerDashboard() {
           </div>
 
           {products.length === 0 && (
-            <p className="text-center text-zinc-500 mt-10">{t.noProductsYet}</p>
+            <p className="text-center text-brand-muted mt-10">{t.noProductsYet}</p>
           )}
         </div>
       </main>
@@ -363,7 +363,7 @@ export default function SellerDashboard() {
             <div className="flex flex-col gap-2">
               <button
                 onClick={function () { setShowSuccess(false); }}
-                className="bg-brand-accent text-black font-semibold px-6 py-3 rounded-full hover:bg-zinc-200 transition"
+                className="bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition"
               >
                 {t.addAnother}
               </button>

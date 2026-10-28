@@ -51,7 +51,7 @@ export default function AdminLogin() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white"
+          className="bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]"
           required
         />
 
@@ -60,24 +60,24 @@ export default function AdminLogin() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white"
+          className="bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]"
           required
         />
 
         {errorMsg && (
-          <p className="text-red-400 text-sm text-center">{errorMsg}</p>
+          <p className="text-red-600 text-sm text-center">{errorMsg}</p>
         )}
 
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 bg-brand-accent text-black font-semibold px-6 py-3 rounded-full hover:bg-zinc-200 transition disabled:opacity-50"
+          className="mt-2 bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition disabled:opacity-50"
         >
           {loading ? "Logging in..." : "Log In"}
         </button>
       </form>
 
-      <a href="/" className="text-brand-muted hover:text-white text-sm transition">
+      <a href="/" className="text-brand-muted hover:text-[#0171bb] text-sm transition">
         ← Back to Home
       </a>
     </main>

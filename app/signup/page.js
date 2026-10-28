@@ -116,7 +116,7 @@ export default function Signup() {
   }
 
   const inputClass =
-    "bg-brand-bg border border-zinc-700 rounded-lg px-4 py-2 outline-none focus:border-white";
+    "bg-brand-bg border border-[#81b7db] rounded-lg px-4 py-2 outline-none focus:border-[#0171bb]";
 
   // Log in screen for people who already have an account
   if (mode === "login") {
@@ -148,12 +148,12 @@ export default function Signup() {
               required
             />
 
-            {errorMsg && <p className="text-red-400 text-sm text-center">{errorMsg}</p>}
+            {errorMsg && <p className="text-red-600 text-sm text-center">{errorMsg}</p>}
 
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 bg-brand-accent text-black font-semibold px-6 py-3 rounded-full hover:bg-zinc-200 transition disabled:opacity-50"
+              className="mt-2 bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition disabled:opacity-50"
             >
               {loading ? t.loggingIn : t.logIn}
             </button>
@@ -161,7 +161,7 @@ export default function Signup() {
             <button
               type="button"
               onClick={() => { setErrorMsg(""); setMode("signup"); }}
-              className="text-brand-muted hover:text-white text-sm text-center transition"
+              className="text-brand-muted hover:text-[#0171bb] text-sm text-center transition"
             >
               {t.dontHaveAccount}
             </button>
@@ -251,12 +251,12 @@ export default function Signup() {
             </>
           )}
 
-          {errorMsg && <p className="text-red-400 text-sm text-center">{errorMsg}</p>}
+          {errorMsg && <p className="text-red-600 text-sm text-center">{errorMsg}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 bg-brand-accent text-black font-semibold px-6 py-3 rounded-full hover:bg-zinc-200 transition disabled:opacity-50"
+            className="mt-2 bg-brand-accent text-white font-semibold px-6 py-3 rounded-full hover:bg-[#015a96] transition disabled:opacity-50"
           >
             {loading ? t.creatingAccount : t.signUp}
           </button>
@@ -264,7 +264,7 @@ export default function Signup() {
           <button
             type="button"
             onClick={() => { setErrorMsg(""); setMode("login"); }}
-            className="text-brand-muted hover:text-white text-sm text-center transition"
+            className="text-brand-muted hover:text-[#0171bb] text-sm text-center transition"
           >
             {t.alreadyHaveAccount}
           </button>
