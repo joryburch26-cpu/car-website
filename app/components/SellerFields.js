@@ -143,6 +143,18 @@ export default function SellerFields({ values, setValues }) {
       </div>
 
       <div>
+        <label className={labelClass}>{x.fieldParts}</label>
+        <textarea
+          value={values.parts}
+          onChange={(e) => set("parts", e.target.value)}
+          className={inputClass}
+          rows={2}
+          maxLength={300}
+        />
+        <p className="text-xs text-brand-muted mt-1">{x.partsHint}</p>
+      </div>
+
+      <div>
         <label className={labelClass}>{x.fieldCountries}</label>
         <div className="flex flex-wrap gap-2">
           {carBrands.map((c) => (

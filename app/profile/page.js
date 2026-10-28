@@ -73,6 +73,7 @@ export default function Profile() {
       governorate: seller.governorate || "",
       area: seller.area || "",
       address: seller.address || "",
+      parts: seller.parts || "",
       countries: seller.car_countries || [],
       brands: seller.car_brands || [],
     });
@@ -113,6 +114,7 @@ export default function Profile() {
     const changes = {
       name: values.name.trim(),
       shop_name: values.shopName.trim() || null,
+      parts: values.parts.trim() || null,
       phone: values.phone.trim(),
       email: contactEmail.trim(),
       governorate: values.governorate,
@@ -310,6 +312,7 @@ export default function Profile() {
             {row(x.fieldGovernorate, governorateName)}
             {row(x.fieldArea, seller.area)}
             <div className="sm:col-span-2">{row(x.fieldAddress, seller.address)}</div>
+            <div className="sm:col-span-2">{row(x.fieldParts, seller.parts)}</div>
 
             <div className="sm:col-span-2">
               <p className="text-sm text-brand-muted mb-2">{x.carsIWorkOn}</p>

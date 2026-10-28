@@ -34,6 +34,7 @@ export default function Signup() {
     governorate: "",
     area: "",
     address: "",
+    parts: "",
     countries: [],
     brands: [],
   });
@@ -120,6 +121,7 @@ export default function Signup() {
       is_approved: true,
       name: values.name.trim(),
       shop_name: values.shopName.trim() || null,
+      parts: values.parts.trim() || null,
       car_countries: values.countries,
       car_brands: values.brands,
       governorate: values.governorate,

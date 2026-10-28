@@ -1,6 +1,7 @@
 "use client";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
+import SearchSection from "./components/SearchSection";
 import { useSeller } from "./lib/useSeller";
 import { useLanguage } from "./context/LanguageContext";
 import { siteText } from "./data/siteText";
@@ -41,8 +42,8 @@ export default function Home() {
 
             <img src="/car-parts.jpg" alt={x.carAlt} className="w-full h-auto" />
 
-            {/* Empty space under the car: the search will go here */}
-            <div id="search" className="min-h-[200px] scroll-mt-4" />
+            {/* The search bars and the sellers who match */}
+            <SearchSection />
           </section>
 
           <aside className="hidden md:block bg-[#E4F1F9]" aria-hidden="true" />
