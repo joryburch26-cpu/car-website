@@ -136,16 +136,27 @@ export default function Profile() {
       changes.avatar_url = url;
     }
 
-    const { error } = await supabase.from("sellers").update(changes).eq("user_id", userId);
-
-    setSaving(false);
+    const { data: updatedRows, error } = await supabase
+      .from("sellers")
+      .update(changes)
+      .eq("user_id", userId)
+      .select("user_id");
 
     if (error) {
+      setSaving(false);
       setMessage(error.message);
       return;
     }
 
-    setSeller({ ...seller, ...changes });
+    if (!updatedRows || updatedRows.length === 0) {
+      setSaving(false);
+      setMessage(x.saveFailed);
+      return;
+    }
+
+    // Read the profile again from the database, so the page shows what is really saved
+    await load();
+    setSaving(false);
     setEditing(false);
     setMessage(x.saved);
   }

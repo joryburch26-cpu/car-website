@@ -26,7 +26,15 @@ export default function Home() {
 
           <section>
             <div className="flex items-start justify-around gap-4 mb-6">
-              <a href="#search" className="text-center">
+              <a
+                href="#search"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const section = document.getElementById("search");
+                  if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="text-center"
+              >
                 <span className={titleClass}>{x.searchTitle}</span>
                 <span className={subtitleClass}>{other.searchTitle}</span>
               </a>

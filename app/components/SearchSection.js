@@ -117,7 +117,7 @@ export default function SearchSection() {
   }
 
   return (
-    <div id="search" className="scroll-mt-4 min-h-[200px] mt-4">
+    <div id="search" className="scroll-mt-4 min-h-[85vh] mt-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <SearchSelect
           placeholder={x.searchCountry}
